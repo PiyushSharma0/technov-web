@@ -1,5 +1,5 @@
 // import './styles.module.css'
-import '../../public/styles.css'
+// import '../../public/styles.css'
 
 export const metadata = {
   title: "Technova",

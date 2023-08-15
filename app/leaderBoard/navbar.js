@@ -226,7 +226,7 @@ const Sidebar = () => {
 
   return (
     <Suspense fallback={<p>Loading feed...</p>}>
-      <Container className="block md:hidden">
+      <Container className="hidden md:block">
         <Button clicked={click} onClick={() => handleClick()}></Button>
         <SidebarContainer>
           <Logo>

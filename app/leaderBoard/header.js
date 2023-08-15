@@ -4,14 +4,14 @@ import React from 'react';
 
 export default function Header() {
   return (
-    <header className="fixed top-0 z-10 w-full px-20 py-1 bg-[rgba(255,255,255,0.8)] shadow-[0_2px_4px_rgba(0,0,0,0.1)] md:px-4 transition">
+    <header className="fixed top-0 z-10 w-full px-20 py-1 bg-[rgba(255,255,255,0.8)] shadow-[0_2px_4px_rgba(0,0,0,0.1)]  transition">
       <nav className="flex justify-between items-center">
         <a
           href="/"
           className="flex justify-center items-center"
         >
           <Image src="/Technova.png" alt="Logo" height="60" width="60" />
-          <span className="mx-1 font-['Orbitron'] text-[30px] font-bold text-lightblack tracking-wide sm:hidden">
+          <span className="mx-2 font-['Orbitron'] text-[30px] font-bold text-lightblack tracking-wide hidden md:block">
             Technova
           </span>
         </a>
