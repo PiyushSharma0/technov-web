@@ -32,17 +32,17 @@ const UserCard = () => {
           </tr>
           
     // <tr>
-    //   <td className="p-5 border-b border-gray-200 bg-darkwhite lg:hidden">
-    //     <p className="font-mainfont text-lg font-medium text-darkgrey text-center">
+    //   <td className="p-5 border-b border-gray-200 bg-[#ffffff] lg:hidden">
+    //     <p className="font-mainfont text-lg font-medium text-[#787a91] text-center">
     //       {3 + 4}
     //     </p>
     //   </td>
-    //   <td className="border-b border-gray-200 bg-darkwhite">
-    //     <p className="items-center font-codefont text-xl font-semibold text-primarydark text-center lg:px-3 lg:py-4 lg:text-lg md:text-base">
+    //   <td className="border-b border-gray-200 bg-[#ffffff]">
+    //     <p className="items-center font-codefont text-xl font-semibold text-[#1d4cb0] text-center lg:px-3 lg:py-4 lg:text-lg md:text-base">
     //       {/* # {data.rank} */}# 00
     //     </p>
     //   </td>
-    //   <td className="p-5 border-b border-gray-200 bg-darkwhite w-1/2 lg:px-3 lg:py-4">
+    //   <td className="p-5 border-b border-gray-200 bg-[#ffffff] w-1/2 lg:px-3 lg:py-4">
     //     <div className="flex items-center">
     //       <div className="flex-shrink-0 w-12 h-12 mr-5 lg:hidden">
     //         <Image
@@ -56,34 +56,34 @@ const UserCard = () => {
     //         />
     //       </div>
     //       {/* <div>
-    //         <p className="font-codefont text-xl font-medium text-lightblack tracking-wide capitalize lg:text-lg md:text-base">
+    //         <p className="font-codefont text-xl font-medium text-[#3c434e] tracking-wide capitalize lg:text-lg md:text-base">
     //           {parseName(data.full_name) || (
-    //             <span className="text-lightgrey">Name not found...</span>
+    //             <span className="text-[#9ba4b4]">Name not found...</span>
     //           )}
     //         </p>
-    //         <p className="font-curlfont text-base font-semibold text-darkgrey lg:hidden">
+    //         <p className="font-curlfont text-base font-semibold text-[#787a91] lg:hidden">
     //           {data.college || (
-    //             <span className="text-warningoff">College not found...</span>
+    //             <span className="text-[#ff3838]">College not found...</span>
     //           )}
     //         </p>
     //       </div> */}
     //     </div>
     //   </td>
-    //   <td className="p-5 border-b border-gray-200 bg-darkwhite lg:hidden">
+    //   <td className="p-5 border-b border-gray-200 bg-[#ffffff] lg:hidden">
     //     <Link
     //       //   href={data.user_url}
     //       href={"#"}
     //       target="_blank"
     //       rel="noreferrer"
-    //       className="py-1 px-4 font-codefont text-base font-medium text-lightblack bg-primaryoff rounded-lg tracking-wide text-center"
+    //       className="py-1 px-4 font-codefont text-base font-medium text-[#3c434e] bg-[#99feff] rounded-lg tracking-wide text-center"
     //     >
     //       {/* {data.user_name} */}
     //       userName
     //     </Link>
     //   </td>
-    //   <td className="p-5 border-b text-center border-gray-200 bg-darkwhite lg:hidden">
+    //   <td className="p-5 border-b text-center border-gray-200 bg-[#ffffff] lg:hidden">
     //     <p
-    //       className="py-1 px-3 cursor-pointer font-curlfont text-base font-bold text-lightblack w-fit hover:text-darkwhite hover:bg-primarylight transition rounded-lg text-center"
+    //       className="py-1 px-3 cursor-pointer font-curlfont text-base font-bold text-[#3c434e] w-fit hover:text-[#ffffff] hover:bg-[#385cf0] transition rounded-lg text-center"
     //       //   onClick={() => {
     //       //     setModalOpen(true);
     //       //     setUserData(data);
@@ -92,8 +92,8 @@ const UserCard = () => {
     //       View All PRs
     //     </p>
     //   </td>
-    //   <td className="p-5 border-b border-gray-200 bg-darkwhite text-center lg:px-3 lg:py-4 xs:hidden">
-    //     <span className="font-codefont text-xl font-medium text-lightblack lg:text-base">
+    //   <td className="p-5 border-b border-gray-200 bg-[#ffffff] text-center lg:px-3 lg:py-4 xs:hidden">
+    //     <span className="font-codefont text-xl font-medium text-[#3c434e] lg:text-base">
     //       {/* {data.total_points} */}
     //       points
     //     </span>

@@ -1,24 +1,81 @@
-import React from "react";
-import TableHeader from "./tableHeader";
-import UserCard from "./userCard";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
-export default function Table() {
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: 'transparent',
+    color: theme.palette.common.black,
+    
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  // '&:last-child td, &:last-child th': {
+  //   border: 0,
+  // },
+}));
+
+function createData(name, calories, fat, carbs, protein) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
+
+export default function StyledTable() {
   return (
-    <div className="container my-4 px-12 lg:px-8 sm:px-2">
-      <div className="shadow-[0_0_2px_rgba(50,69,107,0.4)] rounded-lg overflow-hidden">
-        <table className="w-full table-auto">
-          <TableHeader />
-
-          <tbody>
-            {/* {data.map((item, i) => ( */}
-            <UserCard
-            //    key={item.user_name}
-            //   data={item} index={i}
-            />
-            {/* ))} */}
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <TableContainer className='bg-transparent'  component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead className='shadow-lg '>
+          <TableRow >
+            <StyledTableCell className='border-r-2 bg-gray-300 font-bold '>Name</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">GitHub</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">DataPool</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">CyberPirates</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">TechHub</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">GameDrifters</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">GDSC</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">Entrepreneurs</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">Totals</StyledTableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <StyledTableRow key={row.name}>
+              <StyledTableCell className='border-r-2  font-bold' component="th" scope="row">
+                {row.name}
+              </StyledTableCell>
+              <StyledTableCell align="right">{row.calories}</StyledTableCell>
+              <StyledTableCell align="right">{row.fat}</StyledTableCell>
+              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+            </StyledTableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
