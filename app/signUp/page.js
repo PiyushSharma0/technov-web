@@ -65,9 +65,9 @@ export default function Home() {
   console.log(user);
   if (user.displayName != null) {
     return (
-      <div className="min-h-screenzz bg-gray-900 flex justify-center items-center">
+      <div className="min-h-screen bg-gray-900 flex justify-center items-center">
         <div className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
-          <div className="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
+          <div className="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-4xl z-10">
             <div className="self-start hidden lg:flex flex-col text-gray-300">
               <h1 className="my-3 font-semibold text-4xl">
                 Hurray! You are already Logged In{" "}
@@ -105,7 +105,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gray-900 flex justify-center items-center">
-      <div className="relative min-h-screen sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
+      <div className="relative  sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
         <div className="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
           <div className="self-start hidden lg:flex flex-col text-gray-300">
             <h1 className="my-3 font-semibold text-4xl">Get Started</h1>

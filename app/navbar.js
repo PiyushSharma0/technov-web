@@ -11,7 +11,7 @@ const Navbar = () => {
   const navigation = ["Profile", "LeaderBoard"];
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  console.log(theme);
+  // console.log(theme);
 
   return (
     <div

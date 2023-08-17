@@ -57,7 +57,7 @@ const Button = styled.button`
 `;
 
 const SidebarContainer = styled.div`
-  background-color: #000;
+  background-color: transparent;
   width: 3.5rem;
   height: 80vh;
   margin-top: 2rem;
@@ -82,13 +82,14 @@ const Logo = styled.div`
 `;
 
 const SlickBar = styled.ul`
-  color: white;
+  color: black;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   list-style: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: black;
-
+  background-color: white;
+  
   padding: 2rem 0;
 
   position: absolute;
@@ -102,7 +103,8 @@ const SlickBar = styled.ul`
 
 const Item = styled.a`
   text-decoration: none;
-  color: white;
+  color: black;
+  font-weight: 600;
   width: 100%;
   padding: 1rem 0;
   cursor: pointer;
@@ -216,10 +218,10 @@ const Sidebar = () => {
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
   const navs = [
-    { name: "Home", image: "/home-solid.svg" },
-    { name: "Team", image: "/social.svg" },
-    { name: "Calender", image: "/sceduled.svg" },
-    { name: "Starred", image: "/starred.svg" },
+    { name: "Home", image: "/home.svg" },
+    { name: "LeaderBoard", image: "/podium.svg" },
+    { name: "Events", image: "/events.svg" },
+    { name: "Profile", image: "/profile.svg" },
   ];
   const [profileClick, setprofileClick] = useState(false);
   const handleProfileClick = () => setprofileClick(!profileClick);
@@ -229,7 +231,7 @@ const Sidebar = () => {
       <Container className="hidden md:block">
         <Button clicked={click} onClick={() => handleClick()}></Button>
         <SidebarContainer>
-          <Logo>
+          {/* <Logo>
             <Image
               className="mix-blend-plus-lighter"
               src="/Technova.png"
@@ -237,7 +239,7 @@ const Sidebar = () => {
               width={2.5}
               height={2.5}
             />
-          </Logo>
+          </Logo> */}
           <SlickBar clicked={click}>
             {navs.map((e, index) => {
               return (
@@ -254,7 +256,7 @@ const Sidebar = () => {
             })}
           </SlickBar>
 
-          <Profile clicked={profileClick}>
+          {/* <Profile clicked={profileClick}>
             <img 
               onClick={() => handleProfileClick()}
               src="/NAAC.png"
@@ -268,12 +270,12 @@ const Sidebar = () => {
                 <a href="/#">view&nbsp;profile</a>
               </Name> */}
 
-              <Logout>
+              {/* <Logout>
                 <img src="/power-off-solid.svg" alt="logout" />
               </Logout>
             </Details>
-          </Profile>
-        </SidebarContainer>
+          </Profile> */}
+        </SidebarContainer> 
       </Container>
     </Suspense>
   );

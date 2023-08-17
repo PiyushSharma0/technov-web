@@ -4,14 +4,17 @@ import ThemeChanger from "./ThemeSwitch";
 import Navbar from "./navbar";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
+import UserContext from "@/context/UserContext";
 
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
     // Prefetch the dashboard page
     router.prefetch('/dashboard')
-  }, [router])
+  }, [router]);
+  const user = useContext(UserContext);
+  console.log(user);
   return (
     <main className="flex w-full justify-center">
       {/* <Image
