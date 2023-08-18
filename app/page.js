@@ -14,7 +14,7 @@ export default function Home() {
     router.prefetch('/dashboard')
   }, [router]);
   const user = useContext(UserContext);
-  console.log(user);
+  // console.log(user);
   return (
     <main className="flex w-full justify-center">
       {/* <Image

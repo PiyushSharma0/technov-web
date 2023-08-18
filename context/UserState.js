@@ -17,7 +17,7 @@ const UserState = (props) => {
     if (user) {
       // data = user;
       setData(user);
-      console.log(user);
+      // console.log(user);
       // ...
     } else {
       // User is signed out
