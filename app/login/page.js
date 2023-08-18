@@ -31,7 +31,7 @@ export default function Home() {
         .catch((error) => {
           const errorCode = error.code;
           setIsLoading(false);
-          alert(errorMessage);
+          alert(error.message);
         });
     } catch (e) {
       setIsLoading(false);
