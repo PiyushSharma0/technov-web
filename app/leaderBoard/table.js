@@ -55,6 +55,7 @@ export default function StyledTable() {
             <StyledTableCell className='font-bold' align="right">GameDrifters</StyledTableCell>
             <StyledTableCell className='font-bold' align="right">GDSC</StyledTableCell>
             <StyledTableCell className='font-bold' align="right">Entrepreneurs</StyledTableCell>
+            <StyledTableCell className='font-bold' align="right">Pixelance</StyledTableCell>
             <StyledTableCell className='font-bold' align="right">Totals</StyledTableCell>
           </TableRow>
         </TableHead>
@@ -67,6 +68,7 @@ export default function StyledTable() {
               <StyledTableCell align="right">{row.calories}</StyledTableCell>
               <StyledTableCell align="right">{row.fat}</StyledTableCell>
               <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+              <StyledTableCell align="right">{row.protein}</StyledTableCell>
               <StyledTableCell align="right">{row.protein}</StyledTableCell>
               <StyledTableCell align="right">{row.protein}</StyledTableCell>
               <StyledTableCell align="right">{row.protein}</StyledTableCell>

@@ -1,7 +1,9 @@
 "use client";
 
 import UserContext from "@/context/UserContext";
+// import client from "@/db";
 import { auth, db } from "@/firebase";
+import axios from "axios";
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -20,48 +22,85 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [sid, setSid] = useState("");
   const [email, setEmail] = useState("");
+  const user = useContext(UserContext);
 
-  const addData = async (name, email, sid) => {
+  const Club = {
+    ClubName: "club1",
+    Events: ["event1", "event2"],
+  };
+
+  const Event = { EventName: "event1", Club: "club1" };
+
+  const addData = async () => {
+    const data = {
+      _id: sid,
+      Image: "",
+      Name: name,
+      Email: email,
+      SystemId: sid,
+      Club: [],
+      LinkedIn: "",
+      Github: "",
+      CoadingProfiles: [],
+      PointsClubwise: [
+        { Name: "Github", Points: 0 },
+        { Name: "Datapool", Points: 0 },
+        { Name: "GDSC", Points: 0 },
+        { Name: "Techhub", Points: 0 },
+        { Name: "CyberPirates", Points: 0 },
+        { Name: "GameDrifters", Points: 0 },
+        { Name: "Entrepreneurs", Points: 0 },
+        { Name: "Pixelance", Points: 0 },
+      ],
+      PointsTotal: 0,
+      PointsEventwise: [],
+    };
+    console.log(data);
     try {
-      await setDoc(doc(db, "/students", name), {
-        Name: name,
-        Email: email,
-        SystemId: sid,
+      const response = await axios.post("/api/users", {
+        query: JSON.stringify(data),
       });
-    } catch (e) {
-      console.error("Error adding document: ", e);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
   };
 
+  // console.log(result);
+
   const handlesignup = (e) => {
     e.preventDefault();
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        // Signed in
-        const user = userCredential.user;
-        // setUser(user);
-        updateProfile(user, {
-          displayName: name,
-          sid: sid,
-          email: email,
-        })
-          .then(() => {
-            addData(name, email, sid);
-            alert("Account Created Successfully, Please Check your Email");
-            router.replace("/login");
+    if (!name || !email || !password || !sid) {
+      alert("Please Fill All The Fields");
+      return;
+    } else {
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // setUser(user);
+          updateProfile(user, {
+            displayName: name,
+            sid: sid,
+            email: email,
           })
-          .then(() => {
-            sendEmailVerification(auth.currentUser);
-          });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorMessage);
-      });
+            .then(() => {
+              addData();
+              alert("Account Created Successfully, Please Check your Email");
+              router.replace("/login");
+            })
+            .then(() => {
+              sendEmailVerification(auth.currentUser);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          alert(errorMessage);
+        });
+    }
   };
 
-  const user = useContext(UserContext);
   console.log(user);
   if (user.displayName != null) {
     return (
@@ -76,9 +115,9 @@ export default function Home() {
                 Please Head To Home Page By{" "}
               </p>
               <button
-              onClick={()=>{
-                router.replace("/leaderBoard")
-              }}
+                onClick={() => {
+                  router.replace("/leaderBoard");
+                }}
                 type="submit"
                 className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
               >
@@ -204,6 +243,7 @@ export default function Home() {
               <div>
                 <button
                   onClick={handlesignup}
+                  // onClick={addData}
                   type="submit"
                   className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
                 >
