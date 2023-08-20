@@ -163,7 +163,7 @@ export default function Home() {
 
               <div className="flex items-center justify-between">
                 <div className="text-sm ml-auto">
-                  <button
+                  <div
                     onClick={() => {
                       try {
                         sendPasswordResetEmail(auth, email)
@@ -188,7 +188,7 @@ export default function Home() {
                     className="text-purple-700 hover:text-purple-600"
                   >
                     Forgot your password?
-                  </button>
+                  </div>
                 </div>
               </div>
 
