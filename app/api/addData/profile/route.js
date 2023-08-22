@@ -11,7 +11,7 @@ async function toJSON(body) {
 
     // all chunks have been read?
     if (done) {
-      return JSON.parse(chunks.join(''));
+      return JSON.parse(chunks.join(""));
     }
 
     const chunk = decoder.decode(value, { stream: true });
@@ -25,21 +25,31 @@ async function toJSON(body) {
 export async function POST(req, res) {
   try {
     const requestData = await toJSON(req.body);
-    // console.log("document",JSON.parse(requestData["query"]));
     const data = JSON.parse(requestData["query"]);
-    console.log(data);
-    
-    // const myDB = client.db("Technova");
-    // const myColl = myDB.collection("students");
-    // const doc = data;
-    // const result = await myColl.insertOne(doc);
-    // console.log(`A document was inserted with the _id: ${result.insertedId}`);
-    
-    // console.log('docment',doc);
-   
-    
 
-    return NextResponse.json(result.insertedId, {
+    const id = data.SystemId;
+
+    const myDB = client.db("Technova");
+    const myColl = myDB.collection("students");
+
+    const filter = { _id: id };
+
+    const updateDocument = {
+      $set: {
+        Image: data.Image,
+        Name: data.Name,
+        Club: data.Club,
+        LinkedIn: data.LinkedIn,
+        Github: data.Github,
+        Course: data.Course,
+      },
+    };
+
+    const result = await myColl.updateOne(filter, updateDocument);
+
+    // console.log('docment',result);
+
+    return NextResponse.json(result, {
       status: 200,
     });
   } catch (error) {

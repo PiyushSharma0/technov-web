@@ -29,14 +29,21 @@ export async function POST(req, res) {
 
     const id = data.ID;
 
-    
+    const myDB = client.db("Technova");
+    const myColl = myDB.collection("students");
+
+    const options = {
+      projection: { _id: id, field1: 1 },
+    };
+    const findResult = await myColl.findOne({ _id: id });
 
     // Get all admins using Prisma
+    // console.log("document", findResult);
 
 
     // console.log('docment',doc);
 
-    return NextResponse.json(data.ID, {
+    return NextResponse.json(findResult, {
       status: 200,
     });
   } catch (error) {

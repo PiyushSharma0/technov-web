@@ -27,13 +27,13 @@ export async function POST(req, res) {
     const requestData = await toJSON(req.body);
     // console.log("document",JSON.parse(requestData["query"]));
     const data = JSON.parse(requestData["query"]);
-    console.log(data);
+    // console.log(data);
     // Get all admins using Prisma
     const myDB = client.db("Technova");
     const myColl = myDB.collection("students");
     const doc = data;
     const result = await myColl.insertOne(doc);
-    console.log(`A document was inserted with the _id: ${result.insertedId}`);
+    // console.log(`A document was inserted with the _id: ${result.insertedId}`);
     
     // console.log('docment',doc);
    
