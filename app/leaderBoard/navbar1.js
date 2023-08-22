@@ -83,14 +83,13 @@ const Logo = styled.div`
 
 const SlickBar = styled.ul`
   color: black;
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px,
-    rgba(0, 0, 0, 0.22) 0px 15px 12px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   list-style: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: white;
-
+  
   padding: 2rem 0;
 
   position: absolute;
@@ -218,12 +217,11 @@ const Logout = styled.button`
 const Sidebar = () => {
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
-  const router = useRouter();
   const navs = [
-    { name: "Home", image: "/home.svg", link: "/" },
-    { name: "LeaderBoard", image: "/podium.svg", link: "/leaderboard" },
-    { name: "Events", image: "/events.svg", link: "#" },
-    { name: "Profile", image: "/profile.svg", link: "/profile" },
+    { name: "Home", image: "/home.svg" },
+    { name: "LeaderBoard", image: "/podium.svg" },
+    { name: "Events", image: "/events.svg" },
+    { name: "Profile", image: "/profile.svg" },
   ];
   const [profileClick, setprofileClick] = useState(false);
   const handleProfileClick = () => setprofileClick(!profileClick);
@@ -246,10 +244,7 @@ const Sidebar = () => {
             {navs.map((e, index) => {
               return (
                 <Item
-                  onClick={() => {
-                    setClick(false);
-                    router.push(e.link);
-                  }}
+                  onClick={() => setClick(false)}
                   exact
                   activeClassName="active"
                   // to="/"
@@ -275,12 +270,12 @@ const Sidebar = () => {
                 <a href="/#">view&nbsp;profile</a>
               </Name> */}
 
-          {/* <Logout>
+              {/* <Logout>
                 <img src="/power-off-solid.svg" alt="logout" />
               </Logout>
             </Details>
           </Profile> */}
-        </SidebarContainer>
+        </SidebarContainer> 
       </Container>
     </Suspense>
   );

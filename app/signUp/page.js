@@ -55,9 +55,9 @@ export default function Home() {
       PointsTotal: 0,
       PointsEventwise: [],
     };
-    console.log(data);
+    // console.log(data);
     try {
-      const response = await axios.post("/api/users", {
+      const response = await axios.post("/api/addData/signUp", {
         query: JSON.stringify(data),
       });
       console.log(response);
@@ -80,8 +80,7 @@ export default function Home() {
           const user = userCredential.user;
           // setUser(user);
           updateProfile(user, {
-            displayName: name,
-            sid: sid,
+            displayName: sid,
             email: email,
           })
             .then(() => {

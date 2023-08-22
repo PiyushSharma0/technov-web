@@ -1,16 +1,54 @@
 "use client";
+import UserContext from "@/context/UserContext";
 import SideNav from "./navbar";
 import Image from "next/image";
-import { Suspense } from "react";
+import { useRouter } from "next/navigation";
+import { Suspense, useContext } from "react";
 import { useState } from "react";
+import { auth } from "@/firebase";
+import axios from "axios";
 
 export default function Home() {
   const [isEditable, setIsEditable] = useState(false);
-  const [isVarified, setIsVarified] = useState(false);
+  const [isVarified, setIsVarified] = useState(true);
   const [image, setImage] = useState(
     "https://cdn.pixabay.com/photo/2017/08/06/21/01/louvre-2596278_960_720.jpg"
   );
   // console.log(image);
+  const user = useContext(UserContext);
+  // console.log(user.displayName);
+
+  const router = useRouter();
+
+  var id;
+  if (router.query) {
+    id = router.query;
+  } else if (user) {
+    id = user.displayName;
+  } else {
+    id = 0;
+  }
+
+  const fetchData = async () => {
+    // console.log(data);
+    try {
+      const response = await axios.post("/api/fetchData/profile", {
+        query: JSON.stringify({ ID: id }),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const [name, setName] = useState("John Doe");
+  const [email, setEmail] = useState("");
+  const [systemId, setSystemId] = useState("1234567890");
+  const [clubs, setClubs] = useState([]);
+  const [linkedIn, setLinkedIn] = useState("");
+  const [github, setGithub] = useState("");
+  const [coadingProfiles, setCoadingProfiles] = useState([]);
+  const [totalPoints, setTotalPoints] = useState(0);
 
   const handleImageChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -25,6 +63,19 @@ export default function Home() {
       reader.readAsDataURL(selectedFile); // Read the file as a data URL
     }
   };
+
+  const addData = async () => {
+    // console.log(data);
+    try {
+      const response = await axios.post("/api/addData/users", {
+        query: JSON.stringify(data),
+      });
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <main className="flex w-full bg-[azure]">
@@ -69,7 +120,7 @@ export default function Home() {
                 className={`${
                   isVarified ? "bg-blue-500" : "bg-red-500"
                 } rounded-full p-1`}
-                title="Verified"
+                title={`${isVarified ? "Verified" : "Not Verified"}`}
               >
                 {isVarified ? (
                   <svg
@@ -158,16 +209,6 @@ export default function Home() {
                   }}
                   className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
                 >
-                  <svg
-                    id="Layer_1"
-                    style="enable-background:new 0 0 30 30;"
-                    version="1.1"
-                    viewBox="0 0 30 30"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path d="M22,4h-2v6c0,0.552-0.448,1-1,1h-9c-0.552,0-1-0.448-1-1V4H6C4.895,4,4,4.895,4,6v18c0,1.105,0.895,2,2,2h18  c1.105,0,2-0.895,2-2V8L22,4z M22,24H8v-6c0-1.105,0.895-2,2-2h10c1.105,0,2,0.895,2,2V24z" />
-    
-                  </svg>
                   <span>Save</span>
                 </button>
               )}
@@ -188,32 +229,32 @@ export default function Home() {
                     <span className="text-gray-700">Amanda S. Ross</span>
                   </li>
                   <li className="flex border-y py-2">
-                    <span className="font-bold w-24">Birthday:</span>
+                    <span className="font-bold w-24">Email:</span>
                     <span className="text-gray-700">24 Jul, 1991</span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Joined:</span>
+                    <span className="font-bold w-24">System I'd:</span>
                     <span className="text-gray-700">
                       10 Jan 2022 (25 days ago)
                     </span>
                   </li>
-                  <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Mobile:</span>
+                  {/* <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Linkedin:</span>
                     <span className="text-gray-700">(123) 123-1234</span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Email:</span>
+                    <span className="font-bold w-24">Github:</span>
                     <span className="text-gray-700">
                       amandaross@example.com
                     </span>
-                  </li>
+                  </li> */}
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Location:</span>
-                    <span className="text-gray-700">New York, US</span>
-                  </li>
-                  <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Languages:</span>
+                    <span className="font-bold w-24">Course:</span>
                     <span className="text-gray-700">English, Spanish</span>
+                  </li>
+                  <li className="flex border-b py-2">
+                    <span className="font-bold w-24">Total Points:</span>
+                    <span className="text-gray-700">New York, US</span>
                   </li>
                   <li className="flex items-center border-b py-2 space-x-2">
                     <span className="font-bold w-24">Elsewhere:</span>
@@ -294,7 +335,7 @@ export default function Home() {
                     </span>
                   </li>
                   <li className="flex border-y py-2">
-                    <span className="font-bold w-24">Birthday:</span>
+                    <span className="font-bold w-24">Linkedin Profile:</span>
                     <span className="text-gray-700">
                       <input
                         className="peer  h-8 w-full rounded-[7px] border border-blue-gray-200  bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-indigo-500  focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
@@ -303,7 +344,7 @@ export default function Home() {
                     </span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Joined:</span>
+                    <span className="font-bold w-24">Github Profile:</span>
                     <span className="text-gray-700">
                       <input
                         className="peer  h-8 w-full rounded-[7px] border border-blue-gray-200  bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-indigo-500  focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
@@ -312,7 +353,7 @@ export default function Home() {
                     </span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Mobile:</span>
+                    <span className="font-bold w-24">Course:</span>
                     <span className="text-gray-700">
                       <input
                         className="peer  h-8 w-full rounded-[7px] border border-blue-gray-200  bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-indigo-500  focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
@@ -321,7 +362,7 @@ export default function Home() {
                     </span>
                   </li>
                   <li className="flex border-b py-2">
-                    <span className="font-bold w-24">Email:</span>
+                    <span className="font-bold w-24">Clubs:</span>
                     <span className="text-gray-700">
                       <input
                         className="peer  h-8 w-full rounded-[7px] border border-blue-gray-200  bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-indigo-500  focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
@@ -329,7 +370,7 @@ export default function Home() {
                       />
                     </span>
                   </li>
-                  <li className="flex border-b py-2">
+                  {/* <li className="flex border-b py-2">
                     <span className="font-bold w-24">Location:</span>
                     <span className="text-gray-700">
                       <input
@@ -346,7 +387,7 @@ export default function Home() {
                         type="text"
                       />
                     </span>
-                  </li>
+                  </li> */}
                   <li className="flex items-center border-b py-2 space-x-2">
                     <span className="font-bold w-24">Elsewhere:</span>
                     <a href="#" title="Facebook">
@@ -405,6 +446,8 @@ export default function Home() {
                     </a>
                   </li>
                 </ul>
+
+                <button onClick={fetchData}> Click Me!</button>
               </div>
             </div>
           </div>

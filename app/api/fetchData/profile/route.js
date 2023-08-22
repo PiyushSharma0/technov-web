@@ -1,6 +1,5 @@
 import client from "@/db";
-import bodyParser from "body-parser";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 async function toJSON(body) {
   const reader = body.getReader(); // `ReadableStreamDefaultReader`
@@ -12,7 +11,7 @@ async function toJSON(body) {
 
     // all chunks have been read?
     if (done) {
-      return JSON.parse(chunks.join(''));
+      return JSON.parse(chunks.join(""));
     }
 
     const chunk = decoder.decode(value, { stream: true });
@@ -26,21 +25,18 @@ async function toJSON(body) {
 export async function POST(req, res) {
   try {
     const requestData = await toJSON(req.body);
-    // console.log("document",JSON.parse(requestData["query"]));
     const data = JSON.parse(requestData["query"]);
-    console.log(data);
-    // Get all admins using Prisma
-    const myDB = client.db("Technova");
-    const myColl = myDB.collection("students");
-    const doc = data;
-    const result = await myColl.insertOne(doc);
-    console.log(`A document was inserted with the _id: ${result.insertedId}`);
-    
-    // console.log('docment',doc);
-   
+
+    const id = data.ID;
+
     
 
-    return NextResponse.json(result.insertedId, {
+    // Get all admins using Prisma
+
+
+    // console.log('docment',doc);
+
+    return NextResponse.json(data.ID, {
       status: 200,
     });
   } catch (error) {

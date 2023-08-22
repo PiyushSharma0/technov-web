@@ -11,6 +11,7 @@ const UserState = (props) => {
 
   const [data, setData] = useState({
     displayName: user,
+  
   });
 
   onAuthStateChanged(auth, (user) => {
