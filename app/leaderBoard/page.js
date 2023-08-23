@@ -47,9 +47,9 @@ export default function Home() {
               </p>
             </div>
             <div className="relative my-10 xl:px-12 flex flex-col justify-center items-center gap-8 lg:px-8 md:px-8 sm:px-2 md:flex-row">
-              <TopCard number={2} userData={null} />
+              <TopCard  number={2} userData={null} />
 
-              <TopCard number={1} userData={null} />
+              <TopCard id="2021344925" number={1} userData={null} />
 
               <TopCard number={3} userData={null} />
             </div>

@@ -1,9 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import styled from "styled-components";
 import { Suspense } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { auth } from "@/firebase";
+import UserContext from "@/context/UserContext";
 
 const Container = styled.div`
   position: fixed;
@@ -218,15 +220,27 @@ const Logout = styled.button`
 const Sidebar = () => {
   const [click, setClick] = useState(false);
   const handleClick = () => setClick(!click);
-  const router = useRouter();
+  // const router = useRouter();
   const navs = [
     { name: "Home", image: "/home.svg", link: "/" },
-    { name: "LeaderBoard", image: "/podium.svg", link: "/leaderboard" },
+    { name: "LeaderBoard", image: "/podium.svg", link: "/leaderBoard" },
     { name: "Events", image: "/events.svg", link: "#" },
     { name: "Profile", image: "/profile.svg", link: "/profile" },
   ];
   const [profileClick, setprofileClick] = useState(false);
   const handleProfileClick = () => setprofileClick(!profileClick);
+  const user = useContext(UserContext)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const createQueryString = useCallback(
+    (name, value) => {
+      const params = new URLSearchParams(searchParams);
+      params.set(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
 
   return (
     <Suspense fallback={<p>Loading feed...</p>}>
@@ -248,7 +262,15 @@ const Sidebar = () => {
                 <Item
                   onClick={() => {
                     setClick(false);
-                    router.push(e.link);
+                    if (e.name === "Profile") {
+                      router.push(
+                        "/profile" +
+                          "?" +
+                          createQueryString("id", user.displayName)
+                      );
+                    } else {
+                      router.push(e.link);
+                    }
                   }}
                   exact
                   activeClassName="active"

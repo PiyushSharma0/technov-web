@@ -61,7 +61,7 @@ export default function Home() {
       const response = await axios.post("/api/addData/signUp", {
         query: JSON.stringify(data),
       });
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +101,7 @@ export default function Home() {
     }
   };
 
-  console.log(user);
+  // console.log(user);
   if (user.displayName != null) {
     return (
       <div className="min-h-screen bg-gray-900 flex justify-center items-center">

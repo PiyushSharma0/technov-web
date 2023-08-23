@@ -1,28 +1,33 @@
 "use client";
 import UserContext from "@/context/UserContext";
 import SideNav from "./navbar";
+import Header from "./header";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useContext, useEffect } from "react";
 import { useState } from "react";
 import { auth } from "@/firebase";
 import axios from "axios";
+import Link from "next/link";
 
 export default function Home() {
   const [isEditable, setIsEditable] = useState(false);
-  const [isVarified, setIsVarified] = useState(true);
-  const [image, setImage] = useState(
-    "https://cdn.pixabay.com/photo/2017/08/06/21/01/louvre-2596278_960_720.jpg"
-  );
+
+  const [isVarified, setIsVarified] = useState(false);
+  const [image, setImage] = useState("/profile.png");
   // console.log(image);
   const user = useContext(UserContext);
   // console.log(user.displayName);
 
   const router = useRouter();
-
+  const [own, setOwn] = useState(false);
+  // console.log(router.query);
   var id;
-  if (router.query) {
-    id = router.query;
+  const searchParams = useSearchParams();
+
+  if (searchParams) {
+    id = searchParams.get("id");
+    // console.log(searchParams.get("id"));
   } else if (user) {
     id = user.displayName;
   } else {
@@ -31,34 +36,44 @@ export default function Home() {
 
   const [data, setData] = useState({
     Image: "",
-    Name: "name",
-    Email: "email",
-    SystemId: "sid",
-    Course: "",
+    Name: "Loading...",
+    Email: "Loading...",
+    SystemId: "Loading...",
+    Course: "Loading...",
     Club: [],
-    LinkedIn: "",
-    Github: "",
+    LinkedIn: "Loading...",
+    Github: "Loading...",
   });
 
   const [count, setCount] = useState(0);
 
   const fetchData = async () => {
     // console.log(data);
-    if (count < 3) {
-      try {
-        const response = await axios.post("/api/fetchData/profile", {
-          query: JSON.stringify({ ID: id }),
-        });
-        // console.log("fetch",response.data.Name);
-        setData(response.data);
-        setCount(count + 1);
-      } catch (error) {
-        console.log(error);
-      }
+    // if (count < 3) {
+    try {
+      const response = await axios.post("/api/fetchData/profile", {
+        query: JSON.stringify({ ID: id }),
+      });
+      // console.log("fetch",response.data.Name);
+      setName(response.data.Name);
+      setEmail(response.data.Email);
+      setSystemId(response.data.SystemId);
+      setCourse(response.data.Course);
+      setClubs(response.data.Club);
+      setLinkedIn(response.data.LinkedIn);
+      setGithub(response.data.Github);
+      setTotalPoints(response.data.PointsTotal);
+      setImage(response.data.Image);
+      setSelectedClubs(response.data.Club);
+      // console.log(response.data.Club);
+      // setCount(count + 1);
+    } catch (error) {
+      console.log(error);
+      // }
     }
   };
 
-  // console.log("data",data.Name);
+  // console.log("data",data);
 
   const [name, setName] = useState(data.Name);
   const [email, setEmail] = useState(data.Email);
@@ -101,6 +116,8 @@ export default function Home() {
     }
   };
 
+  // console.log(user.displayName);
+
   const addData = async () => {
     // console.log(data);
     const data = {
@@ -116,7 +133,7 @@ export default function Home() {
       const response = await axios.post("/api/addData/profile", {
         query: JSON.stringify(data),
       });
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -128,13 +145,29 @@ export default function Home() {
     if (selectedClubs.includes(clubName)) {
       setSelectedClubs(selectedClubs.filter((club) => club !== clubName));
     } else {
+      // selectedClubs([]);
       setSelectedClubs([...selectedClubs, clubName]);
+      selectedClubs.pop("Loading...");
     }
   };
+  // console.log(searchParams.get("id"));
 
   useEffect(() => {
     fetchData();
-  }, [id, data]);
+    if (auth.currentUser) {
+      setIsVarified(auth.currentUser.emailVerified);
+    }
+    if (searchParams.get("id") === user.displayName) {
+      setOwn(true);
+      // console.log(searchParams.get("id"), user.displayName);
+    } else {
+      setOwn(false);
+      console.log(searchParams.get("id"), "+", user.displayName);
+    }
+  }, [id, data, searchParams]);
+
+  // console.log(user.displayName);
+  const [shouldReload, setShouldReload] = useState(false);
 
   return (
     <>
@@ -142,9 +175,9 @@ export default function Home() {
         <Suspense fallback={<div>Loading...</div>}>
           <SideNav />
         </Suspense>
+        <Header />
       </main>
-
-      <div className="h-full bg-gray-200 p-8">
+      <div className="h-full bg-gray-200 p-24">
         <div className="bg-white rounded-lg shadow-xl pb-8">
           <div className="w-full h-[250px]">
             <img
@@ -230,8 +263,9 @@ export default function Home() {
             <p className="text-gray-700">{course}</p>
           </div>
           <div className="flex-1 flex flex-col items-center lg:items-end justify-end px-8 mt-2">
-            <div className="flex items-center space-x-4 mt-2">
-              {/* <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
+            {own ? (
+              <div className="flex items-center space-x-4 mt-2">
+                {/* <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-4 w-4"
@@ -242,38 +276,41 @@ export default function Home() {
                 </svg>
                 <span>Connect</span>
               </button> */}
-              {!isEditable ? (
-                <button
-                  onClick={() => {
-                    setIsEditable(true);
-                  }}
-                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
-                >
-                  <svg
-                    className="h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 32 32"
-                    width="96px"
-                    height="96px"
-                    // stroke="white"
-                    fill="white"
+                {!isEditable ? (
+                  <button
+                    onClick={() => {
+                      setIsEditable(true);
+                    }}
+                    className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
                   >
-                    <path d="M 23.90625 3.96875 C 22.859375 3.96875 21.8125 4.375 21 5.1875 L 5.1875 21 L 5.125 21.3125 L 4.03125 26.8125 L 3.71875 28.28125 L 5.1875 27.96875 L 10.6875 26.875 L 11 26.8125 L 26.8125 11 C 28.4375 9.375 28.4375 6.8125 26.8125 5.1875 C 26 4.375 24.953125 3.96875 23.90625 3.96875 Z M 23.90625 5.875 C 24.410156 5.875 24.917969 6.105469 25.40625 6.59375 C 26.378906 7.566406 26.378906 8.621094 25.40625 9.59375 L 24.6875 10.28125 L 21.71875 7.3125 L 22.40625 6.59375 C 22.894531 6.105469 23.402344 5.875 23.90625 5.875 Z M 20.3125 8.71875 L 23.28125 11.6875 L 11.1875 23.78125 C 10.53125 22.5 9.5 21.46875 8.21875 20.8125 Z M 6.9375 22.4375 C 8.136719 22.921875 9.078125 23.863281 9.5625 25.0625 L 6.28125 25.71875 Z" />
-                  </svg>
-                  <span>Edit</span>
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    setIsEditable(false);
-                    addData();
-                  }}
-                  className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
-                >
-                  <span>Save</span>
-                </button>
-              )}
-            </div>
+                    <svg
+                      className="h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 32 32"
+                      width="96px"
+                      height="96px"
+                      // stroke="white"
+                      fill="white"
+                    >
+                      <path d="M 23.90625 3.96875 C 22.859375 3.96875 21.8125 4.375 21 5.1875 L 5.1875 21 L 5.125 21.3125 L 4.03125 26.8125 L 3.71875 28.28125 L 5.1875 27.96875 L 10.6875 26.875 L 11 26.8125 L 26.8125 11 C 28.4375 9.375 28.4375 6.8125 26.8125 5.1875 C 26 4.375 24.953125 3.96875 23.90625 3.96875 Z M 23.90625 5.875 C 24.410156 5.875 24.917969 6.105469 25.40625 6.59375 C 26.378906 7.566406 26.378906 8.621094 25.40625 9.59375 L 24.6875 10.28125 L 21.71875 7.3125 L 22.40625 6.59375 C 22.894531 6.105469 23.402344 5.875 23.90625 5.875 Z M 20.3125 8.71875 L 23.28125 11.6875 L 11.1875 23.78125 C 10.53125 22.5 9.5 21.46875 8.21875 20.8125 Z M 6.9375 22.4375 C 8.136719 22.921875 9.078125 23.863281 9.5625 25.0625 L 6.28125 25.71875 Z" />
+                    </svg>
+                    <span>Edit</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setIsEditable(false);
+                      addData();
+                    }}
+                    className="flex items-center bg-blue-600 hover:bg-blue-700 text-gray-100 px-4 py-2 rounded text-sm space-x-2 transition duration-100"
+                  >
+                    <span>Save</span>
+                  </button>
+                )}
+              </div>
+            ) : (
+              ""
+            )}
           </div>
         </div>
 
@@ -303,57 +340,35 @@ export default function Home() {
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Clubs:</span>
-                    <span className="text-gray-700">{clubs}</span>
+                    {clubs.map((club, index) => {
+                      return (
+                        <span key={index} className="text-gray-700">
+                          {club},{" "}
+                        </span>
+                      );
+                    })}
                   </li>
                   <li className="flex border-b py-2">
                     <span className="font-bold w-24">Total Points:</span>
                     <span className="text-gray-700">{totalPoints}</span>
                   </li>
                   <li className="flex items-center border-b py-2 space-x-2">
-                    <span className="font-bold w-24">Elsewhere:</span>
-                    <a href="#" title="Facebook">
+                    <span className="font-bold w-24">Connect:</span>
+                    <Link target="1" href={linkedIn} title="LinkedIn">
                       <svg
-                        className="w-5 h-5"
                         xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 506.86 506.86"
-                      >
-                        <path
-                          fill="#1877f2"
-                          d="M506.86,253.43C506.86,113.46,393.39,0,253.43,0S0,113.46,0,253.43C0,379.92,92.68,484.77,213.83,503.78V326.69H149.48V253.43h64.35V197.6c0-63.52,37.84-98.6,95.72-98.6,27.73,0,56.73,5,56.73,5v62.36H334.33c-31.49,0-41.3,19.54-41.3,39.58v47.54h70.28l-11.23,73.26H293V503.78C414.18,484.77,506.86,379.92,506.86,253.43Z"
-                        ></path>
-                        <path
-                          fill="#fff"
-                          d="M352.08,326.69l11.23-73.26H293V205.89c0-20,9.81-39.58,41.3-39.58h31.95V104s-29-5-56.73-5c-57.88,0-95.72,35.08-95.72,98.6v55.83H149.48v73.26h64.35V503.78a256.11,256.11,0,0,0,79.2,0V326.69Z"
-                        ></path>
-                      </svg>
-                    </a>
-                    <a href="#" title="Twitter">
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 333333 333333"
-                      >
-                        <path
-                          fill="#1da1f2"
-                          d="M166667 0c92048 0 166667 74619 166667 166667s-74619 166667-166667 166667S0 258715 0 166667 74619 0 166667 0zm90493 110539c-6654 2976-13822 4953-21307 5835 7669-4593 13533-11870 16333-20535-7168 4239-15133 7348-23574 9011-6787-7211-16426-11694-27105-11694-20504 0-37104 16610-37104 37101 0 2893 320 5722 949 8450-30852-1564-58204-16333-76513-38806-3285 5666-5022 12109-5022 18661v4c0 12866 6532 24246 16500 30882-6083-180-11804-1876-16828-4626v464c0 17993 12789 33007 29783 36400-3113 845-6400 1313-9786 1313-2398 0-4709-247-7007-665 4746 14736 18448 25478 34673 25791-12722 9967-28700 15902-46120 15902-3006 0-5935-184-8860-534 16466 10565 35972 16684 56928 16684 68271 0 105636-56577 105636-105632 0-1630-36-3209-104-4806 7251-5187 13538-11733 18514-19185l17-17-3 2z"
-                        ></path>
-                      </svg>
-                    </a>
-
-                    <a href="#" title="LinkedIn">
-                      <svg
-                        className="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 333333 333333"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
                       >
                         <path
                           fill="#0077b5"
-                          d="M166667 0c92048 0 166667 74619 166667 166667s-74619 166667-166667 166667S0 258715 0 166667 74619 0 166667 0zm-18220 138885h28897v14814l418 1c4024-7220 13865-14814 28538-14814 30514-1 36157 18989 36157 43691v50320l-30136 1v-44607c0-10634-221-24322-15670-24322-15691 0-18096 11575-18096 23548v45382h-30109v-94013zm-20892-26114c0 8650-7020 15670-15670 15670s-15672-7020-15672-15670 7022-15670 15672-15670 15670 7020 15670 15670zm-31342 26114h31342v94013H96213v-94013z"
-                        ></path>
+                          d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"
+                        />
                       </svg>
-                    </a>
+                    </Link>
 
-                    <a href="#" title="GitHub">
+                    <Link target="1" href={github} title="GitHub">
                       <svg
                         className="w-5 h-5"
                         xmlns="http://www.w3.org/2000/svg"
@@ -364,7 +379,7 @@ export default function Home() {
                           d="M319.988 7.973C143.293 7.973 0 151.242 0 327.96c0 141.392 91.678 261.298 218.826 303.63 16.004 2.964 21.886-6.957 21.886-15.414 0-7.63-.319-32.835-.449-59.552-89.032 19.359-107.8-37.772-107.8-37.772-14.552-36.993-35.529-46.831-35.529-46.831-29.032-19.879 2.209-19.442 2.209-19.442 32.126 2.245 49.04 32.954 49.04 32.954 28.56 48.922 74.883 34.76 93.131 26.598 2.882-20.681 11.15-34.807 20.315-42.803-71.08-8.067-145.797-35.516-145.797-158.14 0-34.926 12.52-63.485 32.965-85.88-3.33-8.078-14.291-40.606 3.083-84.674 0 0 26.87-8.61 88.029 32.8 25.512-7.075 52.878-10.642 80.056-10.76 27.2.118 54.614 3.673 80.162 10.76 61.076-41.386 87.922-32.8 87.922-32.8 17.398 44.08 6.485 76.631 3.154 84.675 20.516 22.394 32.93 50.953 32.93 85.879 0 122.907-74.883 149.93-146.117 157.856 11.481 9.921 21.733 29.398 21.733 59.233 0 42.792-.366 77.28-.366 87.804 0 8.516 5.764 18.473 21.992 15.354 127.076-42.354 218.637-162.274 218.637-303.582 0-176.695-143.269-319.988-320-319.988l-.023.107z"
                         ></path>
                       </svg>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
