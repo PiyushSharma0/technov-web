@@ -34,28 +34,9 @@ export default function Home() {
   const addData = async () => {
     const data = {
       _id: sid,
-      Image: "",
       Name: name,
       Email: email,
-      SystemId: sid,
-      Course: "",
-      Club: [],
-      LinkedIn: "",
-      Github: "",
-      CoadingProfiles: [],
-      PointsClubwise: [
-        { Name: "Github", Points: 0 },
-        { Name: "Datapool", Points: 0 },
-        { Name: "GDSC", Points: 0 },
-        { Name: "Techhub", Points: 0 },
-        { Name: "CyberPirates", Points: 0 },
-        { Name: "GameDrifters", Points: 0 },
-        { Name: "Entrepreneurs", Points: 0 },
-        { Name: "Pixelance", Points: 0 },
-      ],
-      PointsTotal: 0,
-      PointsEventwise: [],
-      Role: "Student",
+      Role: "Admin",
     };
     // console.log(data);
     try {
@@ -72,33 +53,11 @@ export default function Home() {
 
   const handlesignup = (e) => {
     e.preventDefault();
-    if (!name || !email || !password || !sid) {
+    if (!name || !email || !password ) {
       alert("Please Fill All The Fields");
       return;
     } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          // setUser(user);
-          updateProfile(user, {
-            displayName: sid,
-            email: email,
-          })
-            .then(() => {
-              addData();
-              alert("Account Created Successfully, Please Check your Email");
-              router.replace("/login");
-            })
-            .then(() => {
-              sendEmailVerification(auth.currentUser);
-            });
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert(errorMessage);
-        });
+      
     }
   };
 
@@ -180,15 +139,6 @@ export default function Home() {
                   className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
                   type="text"
                   placeholder="Name"
-                />
-              </div>
-
-              <div>
-                <input
-                  onChange={(e) => setSid(e.target.value)}
-                  className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
-                  type="text"
-                  placeholder="System I'd"
                 />
               </div>
 

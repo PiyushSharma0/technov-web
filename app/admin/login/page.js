@@ -1,107 +1,46 @@
 "use client";
-
 import UserContext from "@/context/UserContext";
-// import client from "@/db";
-import { auth, db } from "@/firebase";
-import axios from "axios";
+import { auth } from "@/firebase";
 import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  updateProfile,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState, useContext } from "react";
-// import { useContext } from "react/cjs/react.production.min";
 
 export default function Home() {
+  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const router = useRouter();
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [sid, setSid] = useState("");
   const [email, setEmail] = useState("");
-  const user = useContext(UserContext);
-
-  const Club = {
-    ClubName: "club1",
-    Events: ["event1", "event2"],
-  };
-
-  const Event = { EventName: "event1", Club: "club1" };
-
-  const addData = async () => {
-    const data = {
-      _id: sid,
-      Image: "",
-      Name: name,
-      Email: email,
-      SystemId: sid,
-      Course: "",
-      Club: [],
-      LinkedIn: "",
-      Github: "",
-      CoadingProfiles: [],
-      PointsClubwise: [
-        { Name: "Github", Points: 0 },
-        { Name: "Datapool", Points: 0 },
-        { Name: "GDSC", Points: 0 },
-        { Name: "Techhub", Points: 0 },
-        { Name: "CyberPirates", Points: 0 },
-        { Name: "GameDrifters", Points: 0 },
-        { Name: "Entrepreneurs", Points: 0 },
-        { Name: "Pixelance", Points: 0 },
-      ],
-      PointsTotal: 0,
-      PointsEventwise: [],
-      Role: "Student",
-    };
-    // console.log(data);
+  const [password, setPassword] = useState("");
+  const router = useRouter();
+  const handlesignin = (e) => {
+    setIsLoading(true);
     try {
-      const response = await axios.post("/api/addData/signUp", {
-        query: JSON.stringify(data),
-      });
-      // console.log(response);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  // console.log(result);
-
-  const handlesignup = (e) => {
-    e.preventDefault();
-    if (!name || !email || !password || !sid) {
-      alert("Please Fill All The Fields");
-      return;
-    } else {
-      createUserWithEmailAndPassword(auth, email, password)
+      e.preventDefault();
+      signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          // Signed in
           const user = userCredential.user;
-          // setUser(user);
-          updateProfile(user, {
-            displayName: sid,
-            email: email,
-          })
-            .then(() => {
-              addData();
-              alert("Account Created Successfully, Please Check your Email");
-              router.replace("/login");
-            })
-            .then(() => {
-              sendEmailVerification(auth.currentUser);
-            });
+
+          // alert(user.displayName);
+          // alert(user.emailVerified);
+          router.push("/leaderBoard");
         })
+
         .catch((error) => {
           const errorCode = error.code;
-          const errorMessage = error.message;
-          alert(errorMessage);
+          setIsLoading(false);
+          alert(error.message);
         });
+    } catch (e) {
+      setIsLoading(false);
+    } finally {
+      setIsLoading(false);
     }
   };
 
+  const user = useContext(UserContext);
   // console.log(user);
   if (user.displayName != null) {
     return (
@@ -148,12 +87,11 @@ export default function Home() {
       <div className="relative  sm:flex sm:flex-row justify-center bg-transparent rounded-3xl shadow-xl">
         <div className="flex-col flex self-center lg:px-14 sm:max-w-4xl xl:max-w-md z-10">
           <div className="self-start hidden lg:flex flex-col text-gray-300">
-            <h1 className="my-3 font-semibold text-4xl">Get Started</h1>
+            <h1 className="my-3 font-semibold text-4xl">Welcome back</h1>
             <p className="pr-3 text-sm opacity-75">
-              Ready to explore innovation and technology? Join our vibrant
-              Technical Society community for resources, workshops, and
-              collaboration. Shape the future with us on this exciting tech
-              journey!
+              Lorem ipsum is placeholder text commonly used in the graphic,
+              print, and publishing industries for previewing layouts and visual
+              mockups
             </p>
           </div>
         </div>
@@ -161,37 +99,19 @@ export default function Home() {
         <form className="flex justify-center self-center z-10">
           <div className="p-12 bg-white mx-auto rounded-3xl w-96">
             <div className="mb-7">
-              <h3 className="font-semibold text-2xl text-gray-800">Sign Up</h3>
+              <h3 className="font-semibold text-2xl text-gray-800">Sign In</h3>
               <p className="text-gray-400">
-                Already Have an account?{" "}
+                Don't have an account?{" "}
                 <Link
-                  href="/login"
+                  href="/signUp"
                   className="text-sm text-purple-700 hover:text-purple-700"
                 >
-                  Sign In
+                  Sign Up
                 </Link>
               </p>
             </div>
 
             <div className="space-y-6">
-              <div>
-                <input
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
-                  type="text"
-                  placeholder="Name"
-                />
-              </div>
-
-              <div>
-                <input
-                  onChange={(e) => setSid(e.target.value)}
-                  className="w-full text-sm px-4 py-3 bg-gray-200 focus:bg-gray-100 border border-gray-200 rounded-lg focus:outline-none focus:border-purple-400"
-                  type="text"
-                  placeholder="System I'd"
-                />
-              </div>
-
               <div>
                 <input
                   onChange={(e) => setEmail(e.target.value)}
@@ -206,7 +126,7 @@ export default function Home() {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Password"
                   type={showPassword ? "text" : "password"}
-                  className="text-sm  px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400"
+                  className="text-sm px-4 py-3 rounded-lg w-full bg-gray-200 focus:bg-gray-100 border border-gray-200 focus:outline-none focus:border-purple-400"
                 />
                 <div className="flex items-center absolute inset-y-0 right-0 mr-3 text-sm leading-5">
                   <svg
@@ -241,14 +161,63 @@ export default function Home() {
                 </div>
               </div>
 
+              <div className="flex items-center justify-between">
+                <div className="text-sm ml-auto">
+                  <div
+                    onClick={() => {
+                      try {
+                        sendPasswordResetEmail(auth, email)
+                          .then(() => {
+                            // Password reset email sent!
+                            alert("Password reset email sent!");
+                            // ..
+                          })
+                          .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            // ..
+                          });
+                      } catch (e) {
+                        if (!email) {
+                          alert("Please enter your email First :");
+                        } else {
+                          alert(e.message);
+                        }
+                      }
+                    }}
+                    className="text-purple-700 hover:text-purple-600"
+                  >
+                    Forgot your password?
+                  </div>
+                </div>
+              </div>
+
               <div>
                 <button
-                  onClick={handlesignup}
-                  // onClick={addData}
+                  onClick={handlesignin}
                   type="submit"
                   className="w-full flex justify-center bg-purple-800 hover:bg-purple-700 text-gray-100 p-3 rounded-lg tracking-wide font-semibold cursor-pointer transition ease-in duration-500"
                 >
-                  Sign Up
+                  {isLoading ? (
+                    <svg
+                      aria-hidden="true"
+                      class="inline w-4 h-4 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+                      viewBox="0 0 100 101"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                        fill="currentColor"
+                      />
+                      <path
+                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                        fill="currentFill"
+                      />
+                    </svg>
+                  ) : (
+                    "SIgn In"
+                  )}
                 </button>
               </div>
 
